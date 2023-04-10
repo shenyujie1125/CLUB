@@ -69,6 +69,8 @@ for i in range(num_iter):
     sampler_loss.backward() # retain_graph=True)
     sampler_optimizer.step()
 
+    # sampler是可以训练的，而mi_estimator是不可以被训练的，先forward前向传播，然后计算损失，
+    # 用该损失进行反向传播更新参数，此时的更新参数为采样模型参数，不是CLUB模型内部的参数
     for j in range(5):
         mi_estimator.train()
         x_samples, y_samples = sampler.gen_samples(batch_size)
@@ -76,7 +78,8 @@ for i in range(num_iter):
         mi_optimizer.zero_grad()
         mi_loss.backward()
         mi_optimizer.step()
-
+        # mi_estimator设置为可以训练的，先进行learning_loss的前向传播，用learning_loss的损失进行反向传播
+        # 更新参数，此时更新的参数为CLUB模型内部的参数，而不更新采样模型的参数
     mi_true_values.append(sampler.get_MI())
     mi_est_values.append(mi_estimator(x_samples, y_samples).item())
     if i % 100 ==0:
