@@ -1,0 +1,5 @@
+            def cosine_similarity(x, y):
+                x_norm = torch.norm(x, dim=1)
+                y_norm = torch.norm(y, dim=1)
+                dot_product = torch.sum(x*y, dim=1)
+                return dot_product/(x_norm*y_norm+1e-10)
