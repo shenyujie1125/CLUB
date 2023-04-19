@@ -1,0 +1,18 @@
+            def contrastive_loss(A, B):
+                # 对 A 和 B 矩阵进行特征归一化
+                A = normalize(A)
+                B = normalize(B)
+                # 计算 A 矩阵的每个样本与 B 矩阵的每个样本之间的余弦相似度
+                similarities = torch.mm(A, B.t())  # similarities: (n, m)
+                loss = 0
+                sum = torch.sum(similarities, dim=1)
+                for ℹ in range(A.shape[0]):
+                    loss += similarities[i][i]/(sum[i]+1e-10)
+                return loss
+
+            def normalize(x):
+                # 计算每个样本的范数
+                norm = torch.norm(x, dim=1, keepdim=True)
+                # 对每个样本进行归一化
+                x = x / (norm + 1e-10)
+                return x
